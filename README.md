@@ -1,6 +1,6 @@
 **DroidDeck: Mali Fix**
 
-Сборка [DroidDeck](https://github.com/ASEbrahim/DroidDeck) с форком моста [MaliBridge](https://github.com/ASEbrahim/MaliBridge), настроенным для **Samsung Galaxy A35 (Exynos 1380, Mali-G68)**. Цель: меньше фризов в Steam- и PC-играх на телефонах с Mali.
+Сборка [DroidDeck](https://github.com/ASEbrahim/DroidDeck) с форком моста [MaliBridge](https://github.com/ASEbrahim/MaliBridge), настроенным для **Mali**. Цель: меньше фризов в Steam- и PC-играх на телефонах с Mali.
 
 Это неофициальный форк. Все права и заслуги принадлежат оригинальному автору (ASEbrahim). Лицензия GPL-3.0 сохранена, исходный код открыт.
 
