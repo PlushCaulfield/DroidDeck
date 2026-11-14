@@ -329,7 +329,7 @@ class ScreenKeys(context: Context, private val sendKey: (Int, Boolean) -> Unit) 
     }
 
     fun releaseAll() {
-        dpadDown.values.forEach { releaseKey(it) }
+        dpadDown.values.forEach { packed -> unpackScreenKeyCodes(packed).forEach { releaseKey(it) } }
         dpadDown.clear()
         entries.forEach { it.armed = -1 }
         stickCodes.values.flatten().forEach { if (it != 0) releaseKey(it) }
@@ -466,7 +466,7 @@ class ScreenKeys(context: Context, private val sendKey: (Int, Boolean) -> Unit) 
         DPAD_DIRS.forEachIndexed { index, dir ->
             val on = entry.armed == index
             val code = entry.codes.getOrNull(index) ?: 0
-            val name = if (code == 0) "" else screenKeyLabel(context, listOf(code))
+            val name = if (code == 0) "" else screenKeyLabel(context, unpackScreenKeyCodes(code))
             if (entry.labels && name.isNotEmpty()) {
                 textPaint.color = if (on) Color.WHITE else tinted(color, alpha)
                 textPaint.textSize = dp(48f)
@@ -560,7 +560,7 @@ class ScreenKeys(context: Context, private val sendKey: (Int, Boolean) -> Unit) 
         STICK_DIRS.forEachIndexed { index, unit ->
             val on = entry.armed == index
             val code = entry.codes.getOrNull(index) ?: 0
-            val name = if (code == 0) "" else screenKeyLabel(context, listOf(code))
+            val name = if (code == 0) "" else screenKeyLabel(context, unpackScreenKeyCodes(code))
             if (entry.labels && name.isNotEmpty()) {
                 textPaint.color = if (on) Color.WHITE else tinted(color, 0.85f * alpha)
                 textPaint.textSize = dp(48f)
@@ -585,12 +585,10 @@ class ScreenKeys(context: Context, private val sendKey: (Int, Boolean) -> Unit) 
     private fun directionCodes(entry: Entry, index: Int): List<Int> {
         if (index < 0) return emptyList()
         val code = entry.codes.getOrNull(index) ?: 0
-        if (code != 0) return listOf(code)
+        if (code != 0) return unpackScreenKeyCodes(code)
         if (entry.shape != SCREEN_KEY_STICK || index % 2 == 0) return emptyList()
-        return listOfNotNull(
-            entry.codes.getOrNull((index + 7) % 8)?.takeIf { it != 0 },
-            entry.codes.getOrNull((index + 1) % 8)?.takeIf { it != 0 },
-        )
+        return (unpackScreenKeyCodes(entry.codes.getOrNull((index + 7) % 8) ?: 0) +
+            unpackScreenKeyCodes(entry.codes.getOrNull((index + 1) % 8) ?: 0)).distinct()
     }
 
     private fun stickSector(entry: Entry, x: Float, y: Float): Int {
@@ -827,10 +825,10 @@ class ScreenKeys(context: Context, private val sendKey: (Int, Boolean) -> Unit) 
                     val code = entry.codes.getOrNull(arm) ?: 0
                     if (code == 0) return true
                     val pid = event.getPointerId(index)
-                    dpadDown.remove(pid)?.let { releaseKey(it) }
+                    dpadDown.remove(pid)?.let { old -> unpackScreenKeyCodes(old).forEach { releaseKey(it) } }
                     dpadDown[pid] = code
                     entry.armed = arm
-                    pressKey(code)
+                    unpackScreenKeyCodes(code).forEach { pressKey(it) }
                     invalidate()
                     return true
                 }
@@ -899,7 +897,7 @@ class ScreenKeys(context: Context, private val sendKey: (Int, Boolean) -> Unit) 
                 }
                 val armedCode = dpadDown.remove(pid)
                 if (armedCode != null) {
-                    releaseKey(armedCode)
+                    unpackScreenKeyCodes(armedCode).forEach { releaseKey(it) }
                     entries.firstOrNull { it.armed >= 0 && it.codes.contains(armedCode) }?.armed = -1
                     invalidate()
                     return true
@@ -916,7 +914,7 @@ class ScreenKeys(context: Context, private val sendKey: (Int, Boolean) -> Unit) 
                 stickCodes.clear()
                 stickEntries.clear()
                 entries.forEach { it.armed = -1 }
-                dpadDown.values.forEach { releaseKey(it) }
+                dpadDown.values.forEach { packed -> unpackScreenKeyCodes(packed).forEach { releaseKey(it) } }
                 dpadDown.clear()
                 entries.forEach { it.armed = -1 }
                 down.values.forEach { release(it) }
