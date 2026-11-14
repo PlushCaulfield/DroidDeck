@@ -48,6 +48,7 @@ import com.droiddeck.launcher.R
 import com.droiddeck.launcher.input.PC_KEYS
 import com.droiddeck.launcher.input.PC_KEY_ROWS
 import com.droiddeck.launcher.input.PC_MODIFIERS
+import com.droiddeck.launcher.input.PC_MOUSE_ROW
 import com.droiddeck.launcher.input.PcKey
 import com.droiddeck.launcher.input.pcKeyLabel
 
@@ -75,7 +76,7 @@ fun ScreenKeyPicker(
         val functionRow = PC_KEY_ROWS[0]
         val nav = listOfNotNull(PC_KEYS[110], PC_KEYS[111], PC_KEYS[102], PC_KEYS[107], PC_KEYS[104], PC_KEYS[109]) +
             listOfNotNull(PC_KEYS[103], PC_KEYS[105], PC_KEYS[108], PC_KEYS[106])
-        listOf(functionRow.take(13), nav) + PC_KEY_ROWS.drop(1)
+        listOf(functionRow.take(13), nav) + PC_KEY_ROWS.drop(1) + listOf(PC_MOUSE_ROW)
     }
     val unit = remember { rows.maxOf { row -> row.fold(0f) { sum, key -> sum + key.weight } } }
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
