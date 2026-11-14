@@ -70,6 +70,7 @@ import com.droiddeck.launcher.input.SCREEN_KEY_STICK
 import com.droiddeck.launcher.input.SCREEN_KEY_TRIGGER
 import com.droiddeck.launcher.input.ScreenKeys
 import com.droiddeck.launcher.input.screenKeyDirections
+import com.droiddeck.launcher.input.screenKeyLabel
 import com.droiddeck.launcher.input.unpackScreenKeyCodes
 import java.io.File
 import kotlin.math.roundToInt
