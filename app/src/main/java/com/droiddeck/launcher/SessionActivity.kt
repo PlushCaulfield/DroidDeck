@@ -3915,6 +3915,15 @@ class SessionActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     private fun sendGuestKey(code: Int, down: Boolean) {
         if (down && pipUi) return
+        if (code == com.droiddeck.launcher.input.MOUSE_WHEEL_UP || code == com.droiddeck.launcher.input.MOUSE_WHEEL_DOWN) {
+            if (down) sendSceneWheel(if (code == com.droiddeck.launcher.input.MOUSE_WHEEL_UP) -1 else 1)
+            return
+        }
+        if (code == com.droiddeck.launcher.input.MOUSE_BUTTON_LEFT || code == com.droiddeck.launcher.input.MOUSE_BUTTON_RIGHT ||
+            code == com.droiddeck.launcher.input.MOUSE_BUTTON_MIDDLE) {
+            sendSceneButton(code, down)
+            return
+        }
         if (down) guestKeysDown.add(code) else guestKeysDown.remove(code)
         if (down || code !in gestureKeysDown) WaylandCompositor.nativeSendKey(code, if (down) 1 else 0)
     }
