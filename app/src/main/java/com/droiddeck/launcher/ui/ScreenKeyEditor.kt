@@ -69,8 +69,8 @@ import com.droiddeck.launcher.input.SCREEN_KEY_ROUND
 import com.droiddeck.launcher.input.SCREEN_KEY_STICK
 import com.droiddeck.launcher.input.SCREEN_KEY_TRIGGER
 import com.droiddeck.launcher.input.ScreenKeys
-import com.droiddeck.launcher.input.pcKeyLabel
 import com.droiddeck.launcher.input.screenKeyDirections
+import com.droiddeck.launcher.input.unpackScreenKeyCodes
 import java.io.File
 import kotlin.math.roundToInt
 
@@ -243,7 +243,7 @@ fun ScreenKeyEditor(
                         directions.forEachIndexed { index, arrow ->
                             val code = codes.getOrNull(index) ?: 0
                             Chip(
-                                if (code == 0) arrow else "$arrow ${pcKeyLabel(context, code)}",
+                                if (code == 0) arrow else "$arrow ${screenKeyLabel(context, unpackScreenKeyCodes(code))}",
                                 code != 0, Modifier.weight(1f),
                             ) { onDirection(index) }
                         }
