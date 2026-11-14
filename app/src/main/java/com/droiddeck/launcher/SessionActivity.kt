@@ -999,15 +999,17 @@ class SessionActivity : ComponentActivity(), SurfaceHolder.Callback {
                     val dir = screenKeyDir
                     com.droiddeck.launcher.ui.ScreenKeyPicker(
                         initial = if (dir != null) {
-                            listOfNotNull((screenKeyEdit?.codes?.getOrNull(dir) ?: 0).takeIf { it != 0 })
+                            com.droiddeck.launcher.input.unpackScreenKeyCodes(screenKeyEdit?.codes?.getOrNull(dir) ?: 0)
                         } else {
                             screenKeyBind ?: emptyList()
                         },
+                        sequence = dir != null,
+                        sequenceLimit = com.droiddeck.launcher.input.SCREEN_KEY_PACK_LIMIT,
                         onDismiss = { screenKeyPickerOpen = false; screenKeyBind = null; screenKeyDir = null },
                         onAdd = { codes ->
                             val bind = screenKeyBind
                             if (dir != null && bind != null) {
-                                screenKeys?.setDirection(bind, dir, codes.lastOrNull() ?: 0)?.let { screenKeyEdit = it }
+                                screenKeys?.setDirection(bind, dir, com.droiddeck.launcher.input.packScreenKeyCodes(codes))?.let { screenKeyEdit = it }
                             } else if (bind != null) {
                                 screenKeys?.setCodes(bind, codes)?.let { screenKeyEdit = it }
                             } else {
