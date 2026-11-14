@@ -51,7 +51,19 @@ val PC_KEY_ROWS: List<List<PcKey>> = listOf(
 
 val PC_MODIFIERS: Set<Int> = setOf(42, 54, 29, 97, 56, 100, 125)
 
-val PC_KEYS: Map<Int, PcKey> = PC_KEY_ROWS.flatten().associateBy { it.code }
+const val MOUSE_BUTTON_LEFT = 0x110
+const val MOUSE_BUTTON_RIGHT = 0x111
+const val MOUSE_BUTTON_MIDDLE = 0x112
+const val MOUSE_WHEEL_UP = 0x2F0
+const val MOUSE_WHEEL_DOWN = 0x2F1
+
+/** Mouse buttons and wheel as pseudo-keys, so screen keys can click and scroll. */
+val PC_MOUSE_ROW: List<PcKey> = listOf(
+    k("ЛКМ", MOUSE_BUTTON_LEFT, 1.5f), k("ПКМ", MOUSE_BUTTON_RIGHT, 1.5f), k("СКМ", MOUSE_BUTTON_MIDDLE, 1.5f),
+    k("Кол.↑", MOUSE_WHEEL_UP, 1.5f), k("Кол.↓", MOUSE_WHEEL_DOWN, 1.5f),
+)
+
+val PC_KEYS: Map<Int, PcKey> = (PC_KEY_ROWS.flatten() + PC_MOUSE_ROW).associateBy { it.code }
 
 fun pcKeyLabel(context: Context, code: Int): String {
     val key = PC_KEYS[code] ?: return code.toString()
